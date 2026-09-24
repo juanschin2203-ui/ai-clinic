@@ -1,0 +1,79 @@
+# Laravel
+/vendor
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/storage/app/public/*
+!/storage/app/public/.gitkeep
+/storage/framework/cache/*
+!/storage/framework/cache/.gitkeep
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitkeep
+/storage/framework/views/*
+!/storage/framework/views/.gitkeep
+/storage/logs/*
+!/storage/logs/.gitkeep
+/bootstrap/cache/*
+!/bootstrap/cache/.gitkeep
+
+# Environment files — NEVER commit
+.env
+.env.backup
+.env.production
+.env.local
+.env.*.local
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+.phpunit.result.cache
+.phpunit.cache/
+.php-cs-fixer.cache
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker
+docker-compose.override.yml
+
+# Composer
+composer.phar
+
+# Node
+.npm
+.yarn-integrity
+
+# Build outputs
+/public/build
+/public/mix-manifest.json
+
+# Testing
+/coverage
+.phpunit.result.cache
+clover.xml
+
+# PHI / Sensitive — absolute blocklist
+*.sql.backup
+*.sqlite
+*_patient_*.csv
+*_phi_*.json
+/storage/uploads/*
+!/storage/uploads/.gitkeep
+
+# Archives
+*.tar.gz
+*.zip
+!/docs/**/*.zip
