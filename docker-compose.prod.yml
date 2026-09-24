@@ -1,0 +1,88 @@
+# ============================================================================
+# Rocket Coding — production compose
+# ============================================================================
+# Apply with: docker compose -f docker-compose.yml -f docker-compose.prod.yml up
+#
+# This file OVERRIDES settings in docker-compose.yml for production:
+#   - Replaces the local Sail dev image with the prod-built Dockerfile image
+#   - Removes bind-mounts (source lives inside the image, immutable)
+#   - Disables Xdebug / dev tooling via env vars
+#   - Spawns dedicated `worker` and `cron` service roles from the same image
+#   - Binds to 127.0.0.1 on the app port — SSL termination happens upstream
+#     (ALB, Cloudflare, nginx on the host, etc.)
+#   - External MySQL/Redis: in real production, delete the mysql/redis services
+#     entirely and set DB_HOST / REDIS_HOST in .env.production to managed
+#     services (RDS / ElastiCache). The services below are convenient for
+#     single-host deploys but NOT recommended for clinical workloads.
+# ============================================================================
+
+services:
+    laravel.test:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: rocket-coding:latest
+        restart: unless-stopped
+        command: ["web"]
+        ports:
+            - '127.0.0.1:8080:8080'
+        environment:
+            APP_ENV: production
+            APP_DEBUG: 'false'
+            LOG_CHANNEL: stderr           # container-native logging (JSON handled via monolog config)
+            LOG_LEVEL: warning
+        volumes: []                       # no bind mount — source is baked in
+        depends_on:
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+
+    worker:
+        image: rocket-coding:latest
+        restart: unless-stopped
+        command: ["worker"]
+        environment:
+            APP_ENV: production
+            APP_DEBUG: 'false'
+            LOG_CHANNEL: stderr
+            LOG_LEVEL: info
+        depends_on:
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+
+    cron:
+        image: rocket-coding:latest
+        restart: unless-stopped
+        command: ["cron"]
+        environment:
+            APP_ENV: production
+            APP_DEBUG: 'false'
+            LOG_CHANNEL: stderr
+            LOG_LEVEL: info
+        depends_on:
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+
+    mysql:
+        restart: unless-stopped
+        # Production HIPAA workloads belong on managed MySQL (RDS) with
+        # backups, encryption at rest, multi-AZ failover. Delete this
+        # service in real prod and set DB_HOST to the managed endpoint.
+        ports: []                          # don't expose DB to the host
+        environment:
+            MYSQL_EXTRA_OPTIONS: '--innodb-buffer-pool-size=1G --max-connections=200'
+
+    redis:
+        restart: unless-stopped
+        ports: []                          # don't expose Redis to the host
+        command: ['redis-server', '--appendonly', 'yes', '--maxmemory', '512mb', '--maxmemory-policy', 'allkeys-lru']
+
+    # Mailpit is a DEV-ONLY service; don't start it in prod.
+    mailpit:
+        deploy:
+            replicas: 0

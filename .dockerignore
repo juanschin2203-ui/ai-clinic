@@ -1,0 +1,45 @@
+# Local state — never ship to the production image.
+.env
+.env.*
+!.env.example
+
+# Test + dev artifacts.
+vendor/
+node_modules/
+storage/logs/*
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/framework/testing/*
+storage/app/private/*
+!storage/app/private/.gitignore
+bootstrap/cache/*.php
+bootstrap/cache/*.tmp
+tests/
+.phpunit.cache/
+.phpunit.result.cache
+
+# Source control + CI + IDE noise.
+.git/
+.gitignore
+.gitattributes
+.github/
+.idea/
+.vscode/
+.husky/
+.editorconfig
+.styleci.yml
+
+# Documentation + step-notes — useful on host, useless in the runtime image.
+*.md
+!PUBLIC-README.md
+docs/
+
+# Project misc.
+docker-compose.yml
+docker-compose.prod.yml
+Dockerfile
+
+# OS junk
+.DS_Store
+Thumbs.db

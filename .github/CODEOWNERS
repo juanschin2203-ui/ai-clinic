@@ -1,0 +1,16 @@
+# Rocket Coding — Code Owners
+# These owners will be automatically requested for review on any PR touching these paths.
+
+# Default — Gene reviews everything
+*                                @GeneRocketCoding
+
+# Sensitive areas that MUST have Gene's review
+/app/Services/AI/                @GeneRocketCoding
+/app/Services/PHI/               @GeneRocketCoding
+/app/Services/Billing/           @GeneRocketCoding
+/database/migrations/            @GeneRocketCoding
+.env.example                     @GeneRocketCoding
+/.github/                        @GeneRocketCoding
+/docker/                         @GeneRocketCoding
+SECURITY.md                      @GeneRocketCoding
+CONTRIBUTING.md                  @GeneRocketCoding
