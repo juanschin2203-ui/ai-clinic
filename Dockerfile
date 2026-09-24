@@ -49,7 +49,7 @@ RUN if [ -f package-lock.json ]; then npm run build; fi
 # =============================================================================
 # Stage 3 — runtime
 # =============================================================================
-FROM php:8.3-fpm-alpine AS runtime
+FROM php:8.5-fpm-alpine AS runtime
 
 ARG APP_USER_ID=1000
 ARG APP_GROUP_ID=1000
