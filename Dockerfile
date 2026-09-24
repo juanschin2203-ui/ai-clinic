@@ -34,7 +34,7 @@ RUN composer install \
 # =============================================================================
 # Stage 2 — node (frontend asset build, if using Vite)
 # =============================================================================
-FROM node:22-alpine AS node-build
+FROM node:25-alpine AS node-build
 
 WORKDIR /app
 
